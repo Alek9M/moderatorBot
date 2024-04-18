@@ -30,3 +30,9 @@ class RegisteredGroup(MessageFilter):
     def filter(self, message):
         group = Group(message.chat.id, message.chat.title)
         return Firebase().group_exists(group)
+
+class Subscribed(MessageFilter):
+    def filter(self, message):
+        member = Member(message.from_user.id, message.from_user.username)
+        group = Group(message.chat.id, message.chat.title)
+        return Firebase().subscriber_exists(member)

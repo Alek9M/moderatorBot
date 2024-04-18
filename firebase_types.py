@@ -1,3 +1,5 @@
+import datetime
+
 
 class Member:
 
@@ -12,6 +14,21 @@ class Member:
 
     def fire(self):
         return {"username": self.username}
+
+
+class Metage:
+    FirestoreCollection = "metages"
+
+    date: datetime
+    length: int
+
+    def __init__(self, date: datetime, length: int):
+        self.date = date
+        self.length = length
+
+    def fire(self):
+        return {"date": self.date, "length": self.length}
+
 
 class Group:
 

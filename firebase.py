@@ -3,7 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from firebase_admin.auth import Client
 
-from firebase_types import Member, Group
+from firebase_types import Member, Group, Metage
 
 cred = credentials.Certificate("firebase-serviceAccountKey.json")
 app = firebase_admin.initialize_app(cred)
@@ -32,6 +32,10 @@ class Firebase:
         doc = self.member_reference(group, member).get()
         return doc.exists
 
+    def subscriber_exists(self,member: Member):
+        doc = self.store.collection(Member.FirestoreCollection).document(member.id).get()
+        return doc.exists
+
     def member_reference(self, group: Group, member: Member):
         return self.group_reference(group).collection(Member.FirestoreCollection).document(member.id)
     def register(self, group: Group, by: Member):
@@ -45,3 +49,10 @@ class Firebase:
 
     def subscribe(self, member: Member):
         self.store.collection(Member.FirestoreCollection).document(member.id).set(member.fire())
+
+
+    def set_meta(self, member: Member, metage: Metage, group: Group):
+        self.member_reference(group, member).collection(Metage.FirestoreCollection).document(str(metage.date)).set(
+            metage.fire())
+
+
