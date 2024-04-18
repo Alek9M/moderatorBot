@@ -21,13 +21,18 @@ class Metage:
 
     date: datetime
     length: int
+    thread: int | None
 
-    def __init__(self, date: datetime, length: int):
+    def __init__(self, date: datetime, length: int, thread: int | None = None):
         self.date = date
         self.length = length
+        self.thread = thread
 
     def fire(self):
-        return {"date": self.date, "length": self.length}
+        if self.thread is None:
+            return {"date": self.date, "length": self.length}
+        else:
+            return {"date": self.date, "length": self.length, "thread": self.thread}
 
 
 class Group:

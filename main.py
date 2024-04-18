@@ -37,12 +37,12 @@ async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
     firebase.subscribe(member)
 
 async def meta_watch(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    metage = Metage(update.message.date, len(update.message.text))
+    metage = Metage(update.message.date, len(update.message.text), update.message.message_thread_id)
     member = Member(update.message.from_user.id, update.message.from_user.username)
     group = Group(update.message.chat.id, update.message.chat.title)
     firebase.set_meta(member, metage, group)
     if danger := Moderator.is_harmful(update.message.text):
-        await context.bot.send_message(chat_id=update.effective_chat.id, text= "@" + Firebase().get_admin_username(group) + "\n" + danger, reply_to_message_id=update.message.message_id)
+        await context.bot.send_message(chat_id=update.effective_chat.id, text= "@" + Firebase().get_admin_username(group) + "\n" + danger, reply_to_message_id=update.message.message_id, message_thread_id=update.message.message_thread_id)
 
 async def terms(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Do you agree to T&C's? If yes reply anything, else - leave")
