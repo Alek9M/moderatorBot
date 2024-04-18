@@ -55,4 +55,8 @@ class Firebase:
         self.member_reference(group, member).collection(Metage.FirestoreCollection).document(str(metage.date)).set(
             metage.fire())
 
-
+    def get_admin_username(self, group: Group) -> str:
+        doc = self.group_reference(group).get()
+        group_admin = doc.to_dict()['admin_id']
+        admin = self.member_reference(group, Member(group_admin, "")).get()
+        return admin.to_dict()['username']
