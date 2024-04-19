@@ -1,4 +1,5 @@
 # This is a sample Python script.
+import logging
 import os
 
 # Press ⌃R to execute it or replace it with your code.
@@ -14,32 +15,35 @@ from firebase_types import Group, Member, Metage
 from moderator import Moderator
 
 load_dotenv()
+logging.basicConfig(level=logging.WARNING)
 
 firebase = Firebase()
 
 async def register_member(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    group = Group(update.message.chat.id, update.message.chat.title, update.message.from_user.id)
-    member = Member(update.message.from_user.id, update.message.from_user.username)
+    group = Group.derive(update.message)
+    member = Member.derive(update.message)
     firebase.add_member(member, group)
 
 
 async def register(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if (password := context.args[0]) and len(context.args) == 1:
         if password == os.getenv('PASSWORD'):
-            group = Group(update.message.chat.id, update.message.chat.title, update.message.from_user.id)
-            member = Member(update.message.from_user.id, update.message.from_user.username)
+            group = Group.derive(update.message)
+            group.admin_id = update.message.from_user.id
+            member = Member.derive(update.message)
+            group.admin = member
             firebase.register(group, member)
             await context.bot.send_message(chat_id=update.effective_chat.id, text="Registered")
 
 
 async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    member = Member(update.message.from_user.id, update.message.from_user.username)
+    member = Member.derive(update.message)
     firebase.subscribe(member)
 
 async def meta_watch(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    metage = Metage(update.message.date, len(update.message.text), update.message.message_thread_id)
-    member = Member(update.message.from_user.id, update.message.from_user.username)
-    group = Group(update.message.chat.id, update.message.chat.title)
+    metage = Metage.derive(update.message)
+    member = Member.derive(update.message)
+    group = Group.derive(update.message)
     firebase.set_meta(member, metage, group)
     if danger := Moderator.is_harmful(update.message.text):
         await context.bot.send_message(chat_id=update.effective_chat.id, text= "@" + Firebase().get_admin_username(group) + "\n" + danger, reply_to_message_id=update.message.message_id, message_thread_id=update.message.message_thread_id)

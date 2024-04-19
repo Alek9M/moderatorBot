@@ -1,8 +1,24 @@
 import datetime
+from abc import abstractmethod
+from typing import Protocol
+
+from telegram import Message
 
 
-class Member:
+class FireType(Protocol):
+    FirestoreCollection: str
 
+    @abstractmethod
+    def fire(self) -> dict:
+        raise NotImplementedError
+
+    @staticmethod
+    @abstractmethod
+    def derive(message: Message) -> "FireType":
+        raise NotImplementedError
+
+
+class Member(FireType):
     FirestoreCollection = "members"
 
     id: str
@@ -15,8 +31,13 @@ class Member:
     def fire(self):
         return {"username": self.username}
 
+    @staticmethod
+    def derive(message: Message) -> "Member":
+        return Member(message.from_user.id, message.from_user.username)
 
-class Metage:
+
+class Metage(FireType):
+
     FirestoreCollection = "metages"
 
     date: datetime
@@ -28,6 +49,10 @@ class Metage:
         self.length = length
         self.thread = thread
 
+    @staticmethod
+    def derive(message: Message) -> "Metage":
+        return  Metage(message.date, len(message.text), message.message_thread_id)
+
     def fire(self):
         if self.thread is None:
             return {"date": self.date, "length": self.length}
@@ -35,22 +60,30 @@ class Metage:
             return {"date": self.date, "length": self.length, "thread": self.thread}
 
 
-class Group:
-
+class Group(FireType):
     FirestoreCollection = "groups"
 
     id: str
     title: str
     admin_id: str
+    admin: Member
 
-    def __init__(self, id: int, title: str, admin_id: int = None):
+    members: [Member]
+
+    def __init__(self, id: int, title: str, admin_id: int = None, admin: Member = None, memberable: bool = False):
         self.id = str(id)
         self.title = title
         if admin_id is not None:
             self.admin_id = str(admin_id)
-        else:
-            self.admin_id = None
+        if admin is not None:
+            # TODO: save admin username
+            self.admin = admin
+        if memberable:
+            self.members = []
 
+    @staticmethod
+    def derive(message: Message) -> "Group":
+        return Group(message.chat.id, message.chat.title)
 
     def fire(self):
         if self.admin_id is None:
