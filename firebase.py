@@ -122,6 +122,8 @@ class Firebase:
         self.store.collection(Member.FirestoreCollection).document(member.id).set(member.fire())
         logging.warning("Set subscriber")
 
+    def unsubscribe(self, member: Member):
+        pass
 
     def set_meta(self, member: Member, metage: Metage, group: Group):
         self.member_reference(group, member).collection(Metage.FirestoreCollection).document(str(metage.date)).set(
