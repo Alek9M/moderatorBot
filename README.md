@@ -20,24 +20,6 @@ A dicision was made to close topic-free chat due to inability to always keep tox
 - **Moderation**: Automatically checks messages for potentially harmful content and notifies the group moderators
 - **Subscriptions**: Members can subscribe or unsubscribe, receiving notifications about group activities and consenting for data collection
 
-### Commands
-#### Roles
-Admin - [Telegram](https://telegram.org) account that can change bot settings in the group
-
-#### In Groups
-| Command      |    Description     |
-| :----------- | :----- |
-| /start [PASSWORD] | A person sending this with the correct password logs the group on Firebase and is assigned as admin |
-| /notify [str: "@* @*..."]        | Set moderators to notify on raised moderation issue         |
-
-#### In Private  
-| Command      |    Description          |
-| :----------- | :------------ |
-| /start | Reading and signing GDPR compliant meta data collection and notifications |
-| /subscribe         | Signing up for data collection and notifications         |
-| /unsubscribe         | Revoking consent for historic metadata collection and deletion of it        |
-
-
 ### Requirements
 Python 3.11
 
