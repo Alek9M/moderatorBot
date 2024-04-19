@@ -68,9 +68,11 @@ class Group(FireType):
     admin_id: str
     admin: Member
 
-    members: [Member]
+    notifying: str = None
 
-    def __init__(self, id: int, title: str, admin_id: int = None, admin: Member = None, memberable: bool = False):
+    members: [Member] = []
+
+    def __init__(self, id: int, title: str, admin_id: int = None, admin: Member = None):
         self.id = str(id)
         self.title = title
         if admin_id is not None:
@@ -78,8 +80,7 @@ class Group(FireType):
         if admin is not None:
             # TODO: save admin username
             self.admin = admin
-        if memberable:
-            self.members = []
+
 
     @staticmethod
     def derive(message: Message) -> "Group":

@@ -35,4 +35,11 @@ class Subscribed(MessageFilter):
     def filter(self, message):
         member = Member(message.from_user.id, message.from_user.username)
         group = Group(message.chat.id, message.chat.title)
-        return Firebase().subscriber_exists(member)
+        return Firebase().subscriber_exists(member, soft_search=True)
+
+
+class Admin(MessageFilter):
+    def filter(self, message):
+        member = Member(message.from_user.id, message.from_user.username)
+        group = Group(message.chat.id, message.chat.title)
+        return Firebase().is_admin(group, member)
