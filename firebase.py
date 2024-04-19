@@ -123,12 +123,27 @@ class Firebase:
         logging.warning("Set subscriber")
 
     def unsubscribe(self, member: Member):
-        pass
+        existing_subscribers_local_copy = [item for item in subscribers_local_copy if item.id == member.id]
+        for existing_subscriber in existing_subscribers_local_copy:
+            subscribers_local_copy.remove(existing_subscriber)
+
+        self.store.collection(Member.FirestoreCollection).document(member.id).delete()
+        logging.warning("Deleted subscriber")
 
     def set_meta(self, member: Member, metage: Metage, group: Group):
         self.member_reference(group, member).collection(Metage.FirestoreCollection).document(str(metage.date)).set(
             metage.fire())
         logging.warning("Set metage")
+
+    def unlist(self, member: Member, group: Group):
+        groups_filtered = [item for item in groups_local_copy if item.id == group.id]
+        for local_group in groups_filtered:
+            members_filtered = [item for item in local_group.members if item.id == member.id]
+            for local_member in members_filtered:
+                group.members.remove(local_member)
+
+        self.member_reference(group, member).delete()
+        logging.warning("Deleted member")
 
 
     def _get_admin_username(self, group: Group) -> str | None:

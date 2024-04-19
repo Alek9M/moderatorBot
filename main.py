@@ -9,7 +9,7 @@ from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filte
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 
 from FireBasedFilters import SupergroupFilter, UnregisteredMember, UnregisteredGroup, PrivateFilter, RegisteredGroup, \
-    Subscribed, Admin
+    Subscribed, Admin, SomeoneJoined, SomeoneLeft
 from firebase import Firebase
 from firebase_types import Group, Member, Metage
 from moderator import Moderator
@@ -92,14 +92,29 @@ async def set_moderators(update: Update, context: ContextTypes.DEFAULT_TYPE):
     firebase.set_group_notification(Group.derive(update.message), " ".join(context.args))
 
 
+async def member_leaving(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    firebase.unlist(Member(update.message.left_chat_member.id, update.message.left_chat_member.username), Group.derive(update.message))
+
+
+async def members_joining(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    for member in update.message.new_chat_members:
+        firebase.add_member(Member(member.id, member.username), Group.derive(update.message))
+
+
 registration_handler = CommandHandler('start', register, SupergroupFilter() & UnregisteredGroup())
-terms_handler = CommandHandler('start', terms, PrivateFilter())
 moderator_notification_handler = CommandHandler('notify', set_moderators, Admin())
+
 userlist_handler = MessageHandler(SupergroupFilter() & RegisteredGroup() & UnregisteredMember(), register_member)
+
+terms_handler = CommandHandler('start', terms, PrivateFilter())
 subscriber_handler = CommandHandler("subscribe", subscribe, PrivateFilter())
 unsubscriber_handler = CommandHandler("unsubscribe", unsubscribe, PrivateFilter())
+
 meta_handler = MessageHandler(filters.TEXT & SupergroupFilter() & RegisteredGroup() & Subscribed(), meta_watch)
 language_handler = MessageHandler(filters.TEXT & SupergroupFilter() & RegisteredGroup(), ananlyse)
+
+new_members_handler = MessageHandler(SomeoneJoined(), members_joining)
+member_left_handler = MessageHandler(SomeoneLeft(), member_leaving)
 
 if __name__ == '__main__':
     application = ApplicationBuilder().token(os.getenv('TBOT_KEY')).build()
@@ -111,6 +126,8 @@ if __name__ == '__main__':
     application.add_handler(unsubscriber_handler)
     application.add_handler(userlist_handler)
     application.add_handler(meta_handler)
+    application.add_handler(new_members_handler)
+    application.add_handler(member_left_handler)
     application.add_handler(language_handler)
     application.add_handler(CallbackQueryHandler(private_button))
 

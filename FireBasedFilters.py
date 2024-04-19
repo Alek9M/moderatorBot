@@ -43,3 +43,12 @@ class Admin(MessageFilter):
         member = Member(message.from_user.id, message.from_user.username)
         group = Group(message.chat.id, message.chat.title)
         return Firebase().is_admin(group, member)
+
+class SomeoneLeft(MessageFilter):
+    def filter(self, message):
+        return hasattr(message, "left_chat_member") and (message.left_chat_member is not None)
+
+
+class SomeoneJoined(MessageFilter):
+    def filter(self, message):
+        return hasattr(message, "new_chat_members") and (message.new_chat_members is not None) and len(message.new_chat_members) > 0
