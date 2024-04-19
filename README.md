@@ -31,8 +31,8 @@ Python 3.11
    ```
 1. **Set Environment**:
    - Insert your telegram bot [token](https://core.telegram.org/bots/tutorial#obtain-your-bot-token) by [@BotFather](https://telegram.me/BotFather)
-   - Copy your `firebase-serviceAccountKey.json` from https://console.firebase.google.com/project/[YOUR_PROJECT]/settings/serviceaccounts/adminsdk
-   - Set a password for registering group
+   - Copy your [`firebase-serviceAccountKey.json`](firebase-serviceAccountKey.json.example) from https://console.firebase.google.com/project/[YOUR_PROJECT]/settings/serviceaccounts/adminsdk
+   - Set a password for registering group in [`.env`](.env.example)
 
 3. **Setup Firebase**: 
    - [Create a Firebase project](https://console.firebase.google.com)
