@@ -1,6 +1,6 @@
 ## Telegram Group Management Bot with Firebase
 
-This repository contains a [Telegram bot](https://core.telegram.org/bots) that was designed for an online non-profit community in UK 🇬🇧
+This repository contains a [Telegram bot](https://core.telegram.org/bots) that was designed for a non-profit community in the UK 🇬🇧
 
 #### Issues
 A dicision was made to close topic-free chat due to inability to always keep toxic messages at bay. That limits socialisation of physically isolated community members.
