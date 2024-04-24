@@ -22,7 +22,8 @@ A dicision was made to close topic-free chat due to inability to always keep tox
 
 ### Requirements
 [Python 3.11](https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tar.xz)
-[Google Cloud CLI](https://cloud.google.com/sdk/docs/install) [with set up Credentials](https://cloud.google.com/docs/authentication/provide-credentials-adc#on-prem)
+
+[Google Cloud CLI](https://cloud.google.com/sdk/docs/install) with [set up credentials](https://cloud.google.com/docs/authentication/provide-credentials-adc#on-prem)
 
 ### Setup
 
@@ -48,8 +49,12 @@ A dicision was made to close topic-free chat due to inability to always keep tox
 ### Cost saving features
 [Google Cloud Natural Language API](https://cloud.google.com/natural-language/pricing) with free 50K/month text assesment
 
-[Firestore](https://cloud.google.com/firestore/pricing) for persistent NoSQL storage. As none of this data is crucial - bot keeps a local copy to reduce queries
+[Firestore](https://cloud.google.com/firestore/pricing) for persistent NoSQL storage. _As none of this data is crucial - bot keeps a local copy to reduce queries_
 
-Runs on [Google Cloud Compute Engine](https://cloud.google.com/free/docs/free-cloud-features#compute) *non-preemptible e2-micro* in *South Carolina: us-east1*
+**Runs on**
+
+~~[Google Cloud Compute Engine](https://cloud.google.com/free/docs/free-cloud-features#compute) *non-preemptible e2-micro* in *South Carolina: us-east1*~~ 
+
+[AWS EC2](https://aws.amazon.com/ec2/) t2.micro _free for 12 month till April '25_
 
 *Based on average text length, population and turnover in the community it all should be within free tier. A budget alert was set*
