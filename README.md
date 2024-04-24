@@ -17,11 +17,12 @@ A dicision was made to close topic-free chat due to inability to always keep tox
 ### Features
 
 - **Group Management**: Sets group moderation, member registery and gathers statistics
-- **Moderation**: Automatically checks messages for potentially harmful content and notifies the group moderators
+- [**Moderation**](https://cloud.google.com/natural-language/docs/moderating-text): Automatically checks messages for potentially harmful content and notifies the group moderators
 - **Subscriptions**: Members can subscribe or unsubscribe, receiving notifications about group activities and consenting for data collection
 
 ### Requirements
-Python 3.11
+[Python 3.11](https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tar.xz)
+[Google Cloud CLI](https://cloud.google.com/sdk/docs/install) [with set up Credentials](https://cloud.google.com/docs/authentication/provide-credentials-adc#on-prem)
 
 ### Setup
 
