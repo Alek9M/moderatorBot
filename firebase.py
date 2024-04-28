@@ -7,7 +7,7 @@ from firebase_admin.auth import Client
 
 from firebase_types import Member, Group, Metage
 
-cred = credentials.Certificate("firebase-serviceAccountKey.json")
+cred = credentials.Certificate("/home/ec2-user/uq/bot/moderatorBot/firebase-serviceAccountKey.json")
 app = firebase_admin.initialize_app(cred)
 
 groups_local_copy: [Group] = []
