@@ -2,6 +2,10 @@
 import logging
 import os
 
+import time
+import requests
+import threading
+
 # Press ⌃R to execute it or replace it with your code.
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 from dotenv import load_dotenv
@@ -19,6 +23,18 @@ logging.basicConfig(level=logging.WARNING)
 
 firebase = Firebase()
 
+# TODO: add a way to stay alive
+# def call_website():
+#     while True:
+#         response = requests.get('https://www.wikipedia.org')
+#         print('Status Code:', response.status_code)
+#         time.sleep(300)
+#
+#
+# thread = threading.Thread(target=call_website)
+# thread.start()
+
+
 async def register_member(update: Update, context: ContextTypes.DEFAULT_TYPE):
     group = Group.derive(update.message)
     member = Member.derive(update.message)
@@ -33,7 +49,8 @@ async def register(update: Update, context: ContextTypes.DEFAULT_TYPE):
             member = Member.derive(update.message)
             group.admin = member
             firebase.register(group, member)
-            await context.bot.send_message(chat_id=update.effective_chat.id, text="Registered✅\n⚠️Starting now all messages in this chat are being processed for moderation assessment")
+            await context.bot.send_message(chat_id=update.effective_chat.id,
+                                           text="Registered✅\n⚠️Starting now all messages in this chat are being processed for moderation assessment")
 
 
 async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -53,6 +70,7 @@ async def unsubscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
     firebase.unsubscribe(member)
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Unsubscribed :c")
 
+
 async def meta_watch(update: Update, context: ContextTypes.DEFAULT_TYPE):
     metage = Metage.derive(update.message)
     member = Member.derive(update.message)
@@ -60,19 +78,25 @@ async def meta_watch(update: Update, context: ContextTypes.DEFAULT_TYPE):
     firebase.set_meta(member, metage, group)
     await ananlyse(update, context)
 
+
 async def ananlyse(update: Update, context: ContextTypes.DEFAULT_TYPE):
     group = Group.derive(update.message)
     if danger := Moderator.is_harmful(update.message.text):
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=Firebase().group_notification(group) + "\n" + danger, reply_to_message_id=update.message.message_id, message_thread_id=update.message.message_thread_id)
+        await context.bot.send_message(chat_id=update.effective_chat.id,
+                                       text=Firebase().group_notification(group) + "\n" + danger,
+                                       reply_to_message_id=update.message.message_id,
+                                       message_thread_id=update.message.message_thread_id)
 
 
 async def terms(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[
-            InlineKeyboardButton("Yes ✍️", callback_data="1"),
-            InlineKeyboardButton("No 🙅‍️", callback_data="2"),
-        ]]
+        InlineKeyboardButton("Yes ✍️", callback_data="1"),
+        InlineKeyboardButton("No 🙅‍️", callback_data="2"),
+    ]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="We are going to ananlyse how often + how much users text. And might shoot you a rare private message. *Is that ok?*\nYou can always /unsubscribe later", reply_markup=reply_markup)
+    await context.bot.send_message(chat_id=update.effective_chat.id,
+                                   text="We are going to ananlyse how often + how much users text. And might shoot you a rare private message. *Is that ok?*\nYou can always /unsubscribe later, that will also delete your history metadata",
+                                   reply_markup=reply_markup)
 
 
 async def private_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -88,12 +112,14 @@ async def private_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await context.bot.send_message(chat_id=update.effective_chat.id, text="Sure 🤷🏼")
     await query.answer()
 
+
 async def set_moderators(update: Update, context: ContextTypes.DEFAULT_TYPE):
     firebase.set_group_notification(Group.derive(update.message), " ".join(context.args))
 
 
 async def member_leaving(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    firebase.unlist(Member(update.message.left_chat_member.id, update.message.left_chat_member.username), Group.derive(update.message))
+    firebase.unlist(Member(update.message.left_chat_member.id, update.message.left_chat_member.username),
+                    Group.derive(update.message))
 
 
 async def members_joining(update: Update, context: ContextTypes.DEFAULT_TYPE):

@@ -101,7 +101,7 @@ class Firebase:
         logging.warning("Set member")
 
     def _register_local(self, group: Group, by: Member):
-        local_group = Group(int(group.id), group.title, int(group.admin.id), by, memberable=True)
+        local_group = Group(int(group.id), group.title, int(group.admin.id), by)
         local_group.members.append(by)
         groups_local_copy.append(group)
 
