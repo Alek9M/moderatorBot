@@ -1,6 +1,6 @@
 ![Telegram Bot](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
 
-## Telegram Group Management Bot with Firebase
+## Group Management Bot
 
 This repository contains a [Telegram bot](https://core.telegram.org/bots) that was designed for a non-profit community in the UK 🇬🇧
 
