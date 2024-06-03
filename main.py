@@ -23,6 +23,7 @@ logging.basicConfig(level=logging.WARNING)
 
 firebase = Firebase()
 
+
 # TODO: add a way to stay alive
 # def call_website():
 #     while True:
@@ -76,16 +77,19 @@ async def meta_watch(update: Update, context: ContextTypes.DEFAULT_TYPE):
     member = Member.derive(update.message)
     group = Group.derive(update.message)
     firebase.set_meta(member, metage, group)
-    await ananlyse(update, context)
+    await analyse(update, context)
 
 
-async def ananlyse(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    group = Group.derive(update.message)
-    if danger := Moderator.is_harmful(update.message.text):
+async def analyse(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    message = update.message
+    if message is None:
+        return
+    group = Group.derive(message)
+    if danger := Moderator.is_harmful(message.text):
         await context.bot.send_message(chat_id=update.effective_chat.id,
                                        text=Firebase().group_notification(group) + "\n" + danger,
-                                       reply_to_message_id=update.message.message_id,
-                                       message_thread_id=update.message.message_thread_id)
+                                       reply_to_message_id=message.message_id,
+                                       message_thread_id=message.message_thread_id)
 
 
 async def terms(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -137,7 +141,7 @@ subscriber_handler = CommandHandler("subscribe", subscribe, PrivateFilter())
 unsubscriber_handler = CommandHandler("unsubscribe", unsubscribe, PrivateFilter())
 
 meta_handler = MessageHandler(filters.TEXT & SupergroupFilter() & RegisteredGroup() & Subscribed(), meta_watch)
-language_handler = MessageHandler(filters.TEXT & SupergroupFilter() & RegisteredGroup(), ananlyse)
+language_handler = MessageHandler(filters.TEXT & SupergroupFilter() & RegisteredGroup(), analyse)
 
 new_members_handler = MessageHandler(SomeoneJoined(), members_joining)
 member_left_handler = MessageHandler(SomeoneLeft(), member_leaving)

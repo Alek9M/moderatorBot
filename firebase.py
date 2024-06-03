@@ -1,13 +1,17 @@
 import logging
+import os
 
 import firebase_admin
+from dotenv import load_dotenv
 from firebase_admin import credentials
 from firebase_admin import firestore
 from firebase_admin.auth import Client
 
 from firebase_types import Member, Group, Metage
 
-cred = credentials.Certificate("/home/ec2-user/uq/bot/moderatorBot/firebase-serviceAccountKey.json")
+load_dotenv()
+
+cred = credentials.Certificate(os.getenv('CERTIFICATE'))
 app = firebase_admin.initialize_app(cred)
 
 groups_local_copy: [Group] = []
