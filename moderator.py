@@ -16,7 +16,7 @@ class Moderator:
         categories = client.moderate_text(request={"document": document}).moderation_categories
         outstanding = ""
         for judgment in categories:
-            if judgment.name  != "Finance" and judgment.name != "Legal" and judgment.name != "Politics" and judgment.name != "Health":
+            if judgment.name  != "Finance" and judgment.name != "Legal" and judgment.name != "Politics" and judgment.name != "Health" and judgment.name != "Illicit Drugs" and judgment.name != "Religion & Belief":
                 if judgment.confidence >= 0.35:
                     outstanding += judgment.name + ":" + "{:.0f}%".format(judgment.confidence * 100) + "\n"
 
