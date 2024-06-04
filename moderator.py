@@ -19,7 +19,7 @@ class Moderator:
         unmonitored = ["Firearms & Weapons", "Finance", "Legal", "Politics", "Health", "Illicit Drugs", "Religion & Belief", "Sexual"]
 
         for judgment in categories:
-            if judgment.name in unmonitored:
+            if judgment.name not in unmonitored:
                 if judgment.confidence >= 0.45:
                     outstanding += judgment.name + ":" + "{:.0f}%".format(judgment.confidence * 100) + "\n"
 
