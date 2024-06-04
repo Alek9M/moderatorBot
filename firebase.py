@@ -197,3 +197,6 @@ class Firebase:
     def download(self):
         self._download_groups()
         self._download_subscribers()
+
+    def export(self):
+        return groups_local_copy

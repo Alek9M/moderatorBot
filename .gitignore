@@ -1,3 +1,5 @@
 .env
 firebase-serviceAccountKey.json
 /.manual
+/snapshot_2024-06-04.json
+/firebase-serviceAccountKey archived.json

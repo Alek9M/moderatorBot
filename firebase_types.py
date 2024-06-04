@@ -77,9 +77,12 @@ class Group(FireType):
         self.title = title
         if admin_id is not None:
             self.admin_id = str(admin_id)
-        if admin is not None:
+        else:
+            self.admin_id = None
+        # if admin is not None:
             # TODO: save admin username
-            self.admin = admin
+        self.admin = admin
+        self.members = []
 
 
     @staticmethod
