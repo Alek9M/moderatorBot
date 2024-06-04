@@ -16,11 +16,11 @@ class Moderator:
         categories = client.moderate_text(request={"document": document}).moderation_categories
         outstanding = ""
 
-        inmonitored = ["Firearms & Weapons", "Finance", "Legal", "Politics", "Health", "Illicit Drugs", "Religion & Belief", "Sexual"]
+        unmonitored = ["Firearms & Weapons", "Finance", "Legal", "Politics", "Health", "Illicit Drugs", "Religion & Belief", "Sexual"]
 
         for judgment in categories:
-            if judgment.name != "Finance" and judgment.name != "Legal" and judgment.name != "Politics" and judgment.name != "Health" and judgment.name != "Illicit Drugs" and judgment.name != "Religion & Belief" and judgment.name != "Sexual":
-                if judgment.confidence >= 0.35:
+            if judgment.name in unmonitored:
+                if judgment.confidence >= 0.45:
                     outstanding += judgment.name + ":" + "{:.0f}%".format(judgment.confidence * 100) + "\n"
 
         if len(outstanding) > 0:
