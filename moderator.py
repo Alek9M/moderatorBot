@@ -20,7 +20,7 @@ class Moderator:
 
         for judgment in categories:
             if judgment.name not in unmonitored:
-                if judgment.confidence >= 0.45:
+                if judgment.confidence > 0.7:
                     outstanding += judgment.name + ":" + "{:.0f}%".format(judgment.confidence * 100) + "\n"
 
         if len(outstanding) > 0:
